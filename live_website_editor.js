@@ -1058,9 +1058,23 @@ var lwe = {
 	start: function() {
 		console.group('lwe > start');
 		with(lwe.f) {
-			var path = 'http://static.t4ke.com/projects/lwe/current/';
-			addScript(path + 'libs.php');
-			addCSS(path + 'css.php');
+			var path = 'http://lwe.googlecode.com/svn/trunk/';
+			addCSS(path + 'css/all.css');
+			addCSS(path + 'css/base.css');
+			addCSS(path + 'css/main.console.css');
+			addCSS(path + 'css/main.editor.css');
+			addCSS(path + 'css/main.history.css');
+			addCSS(path + 'css/main.tabs.css');
+			addScript(path + 'lib/jquery-1.2.6.js');
+			addScript(path + 'lib/jquery-ui-personalized-1.6b.js');
+			addScript(path + 'lib/jquery.jeditable.js');
+			addScript(path + 'lib/jquery.jeditable.autogrow.js');
+			addScript(path + 'lib/jquery.autogrow.js');
+			addScript(path + 'lib/jquery.jeditable.ajaxupload.js');
+			addScript(path + 'lib/jquery.ajaxfileupload.js');
+			addScript(path + 'lib/jquery.flydom-3.1.1.js');
+			addScript(path + 'lib/persist.js');
+			addScript(path + 'lib/json2.js');
 			wait_until_ready(lwe.panel.f.create_main_panel);
 		}
 		console.groupEnd();
