@@ -1,0 +1,185 @@
+/**
+ * Copyright (c) 2009 Arnaud Leymet
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Live Website Editor <http://code.google.com/p/lwe/>
+ * v0.1d
+ * Last update: 2008.08.31
+ * - stylesheet -
+ */
+
+#lwe-main-panel * {
+	outline: 0;
+}
+#lwe-main-panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif;
+	/*background: #e8e8e8 url(http://static.t4ke.com/projects/lwe/current/pic/panel.bg.left.gif) bottom left no-repeat;
+	padding-left: 9px;
+	line-height: 30px;*/
+}
+#lwe-main-panel-container {
+	height: 150px;
+	width: 500px;
+	border: 1px solid #e8e8e8;
+	padding: 2px;
+	/*background: #e8e8e8 url(http://static.t4ke.com/projects/lwe/current/pic/panel.bg.bottom.png) bottom repeat-x;
+	padding-bottom: 5px;*/
+}
+#lwe-main-panel select {
+	border: 1px solid transparent;
+}
+#lwe-main-panel select {
+	border-color: #515151;
+	cursor: pointer;
+}
+#lwe-main-toolbar #lwe-hide-panel {
+	float: left;
+	cursor: pointer;
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_hidepanel.png) center no-repeat;
+	border: 0;
+	outline: 0;
+}
+
+
+/*
+#lwe-history-panel {
+	position: fixed;
+	top: 40px;
+	right: 0;
+	font-family: "Lucida Grande","Lucida Sans Unicode",Arial,sans-serif;
+	background: #e8e8e8 bottom left no-repeat;
+	border: solid 1px #515151;
+	border-right: 0;
+}
+#lwe-history-container {
+	background: #e8e8e8 bottom repeat-x;
+	padding: 5px 2px;
+	width: 200px;
+	min-height: 350px;
+}*/
+
+
+
+.lwe-editable {
+	/*background-color: #ffc;*/
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='http://static.t4ke.com/projects/lwe/current/pic/inline_bg.png');
+}
+.lwe-editable[class] {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/inline_bg.png);
+}
+/*.lwe-editable:hover { background-color: #ffa }*/
+.lwe-movable {
+	border: solid 1px #ddd;
+}
+.lwe-movable:hover {
+	border-color: #4d4;
+}
+
+.lwe-editable-textarea {
+	display: inline;
+}
+
+#lwe-inspector {
+	display: none;
+	z-index: 99999998;
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0.5;
+	filter: Alpha(Opacity=50);
+	padding: 0;
+	margin: 0;
+	border: 2px solid #0000ff;
+	background: transparent;
+}
+/*#FirebugBorderInspector,
+#FirebugBGInspector {
+	display:none;
+	z-index:99999998;
+	position:absolute;
+	top:0;
+	left:0;
+	opacity:0.5;
+	filter:Alpha(Opacity=50);
+	padding:0;
+	margin:0;
+}
+#FirebugBorderInspector {
+	*background:url(spacer.gif);
+}
+#FirebugBGInspector {
+	background:rgb(0,150,255);
+}*/
+
+
+.lwe-panel .move,
+.lwe-panel .delete {
+	display: none;
+	width: 16px;
+	height: 16px;
+	padding: 2px;
+	background: transparent no-repeat;
+}
+.lwe-panel .move {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/drag.png);
+	cursor: move;
+}
+.lwe-panel .delete {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/delete.png);
+	cursor: pointer;
+}
+
+.lwe-draggable {
+	cursor: move;
+}
+.lwe-draggable .lwe-panel {
+	display: none;
+	position: absolute;
+	bottom: 0;
+	left: -18px;
+	/*top: -24px;
+	right: 18px*/
+}
+.lwe-draggable:hover .lwe-panel,
+.lwe-draggable:hover .lwe-panel * {
+	display: block;
+}
+
+#lwe-logo {
+	display: block;
+	width: 43px;
+	height: 23px;
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/logo.png) bottom no-repeat;
+}
+
+#lwe-loading {
+	display: block;
+	float: left;
+	width: 16px;
+	height: 16px;
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/loading.gif) bottom no-repeat;
+}
+
+.lwe-clear {
+	clear: both;
+}

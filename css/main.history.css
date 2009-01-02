@@ -1,0 +1,102 @@
+/**
+ * Copyright (c) 2009 Arnaud Leymet
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Live Website Editor <http://code.google.com/p/lwe/>
+ * v0.1d
+ * Last update: 2008.08.18
+ * - stylesheet -
+ */
+
+#lwe-history {
+	height: 100%;
+	background: #fff;
+}
+
+.lwe-button {
+	cursor: pointer;
+	background: #eee;
+	display: inline-table;
+	float: left;
+	width: 248px;
+}
+.lwe-button input {
+	border: 1px solid transparent;
+}
+.lwe-button label {
+	font-size: 12px;
+	padding-left: 3px;
+}
+.lwe-button * {
+	cursor: pointer;
+}
+#lwe-undo {
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_undo.png) center no-repeat;
+}
+#lwe-redo {
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_redo.png) center no-repeat;
+}
+#lwe-save {
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_save.png) center no-repeat;
+}
+#lwe-load {
+	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_load.png) center no-repeat;
+}
+.lwe-button label:hover {
+	text-decoration: underline;
+}
+.disabled label,
+.disabled label:hover {
+	color: #888;
+	text-decoration: none;
+}
+.disabled {
+	//background: #fff;
+}
+
+// Undo & redo boxes
+
+#lwe-history-undo>.lwe-box-title,
+#lwe-history-redo>.lwe-box-title {
+}
+#lwe-history-undo,
+#lwe-history-redo {
+	background: #fff;
+	border: 1px solid #888;
+	float: left;
+	width: 246px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	margin-top: 2px;
+	height: 106px;
+}
+.lwe-box-title {
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 1px 2px;
+	border-bottom: 1px solid #888;
+}
+.lwe-undo,
+.lwe-redo {
+	font-size: 11px;
+	border-bottom: 1px solid #fff;
+  background-color: #eee;
+}
