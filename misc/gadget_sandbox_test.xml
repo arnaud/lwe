@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="Live Website Editor" 
+    description="Live Website Editor sandbox test" 
+    title_url="http://code.google.com/p/lwe/" 
+    height="440" 
+    width="400" 
+    author="Arnaud Leymet" 
+    author_email="arnaud.leymet@gmail.com" />
+<Content type="html"><![CDATA[ 
 <html>
 	<head>
 		<title>Demo page for lwe</title>
@@ -15,8 +25,8 @@
 			<p id="first-text">First text of a div</p>
 			<u class="test">I'm not in a text tag</u>
 		</div>
-		<u>An iframe:</i><br/>
-		<iframe src="test_iframe.html"></iframe>
 		<script>if(lwe){lwe.stop()}else{var lwe=document.createElement('script');lwe.setAttribute('src','http://tinyurl.com/lwe-trunk');document.body.appendChild(lwe)};void(lwe);</script>
 	</body>
 </html>
+]]></Content>
+</Module>
