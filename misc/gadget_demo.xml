@@ -3,7 +3,7 @@
 <ModulePrefs title="Live Website Editor" 
     description="Live Website Editor demo" 
     title_url="http://code.google.com/p/lwe/" 
-    height="30" 
+    height="302" 
     author="Arnaud Leymet" 
     author_email="arnaud.leymet@gmail.com" />
 <Content type="html"><![CDATA[
