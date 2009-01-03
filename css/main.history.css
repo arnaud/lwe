@@ -48,16 +48,16 @@
 	cursor: pointer;
 }
 #lwe-undo {
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_undo.png) center no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_undo.png) center no-repeat;
 }
 #lwe-redo {
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_redo.png) center no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_redo.png) center no-repeat;
 }
 #lwe-save {
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_save.png) center no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_save.png) center no-repeat;
 }
 #lwe-load {
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_load.png) center no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_load.png) center no-repeat;
 }
 .lwe-button label:hover {
 	text-decoration: underline;

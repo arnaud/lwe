@@ -67,10 +67,10 @@
 	line-height: 32px;
 	margin-top: 4px;
 	cursor: pointer;
-	background: url(http://static.t4ke.com/projects/lwe/current/pic/box.png) top left no-repeat;
+	background: url(http://lwe.googlecode.com/svn/trunk/pic/box.png) top left no-repeat;
 	padding-left: 5px;
 }
 #lwe-editor-actions label:hover,
 #lwe-editor-actions label.selected {
-	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/box2.png);
+	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/box2.png);
 }

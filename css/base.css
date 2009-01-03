@@ -33,7 +33,7 @@
 	top: 0;
 	right: 0;
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif;
-	/*background: #e8e8e8 url(http://static.t4ke.com/projects/lwe/current/pic/panel.bg.left.gif) bottom left no-repeat;
+	/*background: #e8e8e8 url(http://lwe.googlecode.com/svn/trunk/pic/panel.bg.left.gif) bottom left no-repeat;
 	padding-left: 9px;
 	line-height: 30px;*/
 }
@@ -42,7 +42,7 @@
 	width: 500px;
 	border: 1px solid #e8e8e8;
 	padding: 2px;
-	/*background: #e8e8e8 url(http://static.t4ke.com/projects/lwe/current/pic/panel.bg.bottom.png) bottom repeat-x;
+	/*background: #e8e8e8 url(http://lwe.googlecode.com/svn/trunk/pic/panel.bg.bottom.png) bottom repeat-x;
 	padding-bottom: 5px;*/
 }
 #lwe-main-panel select {
@@ -55,7 +55,7 @@
 #lwe-main-toolbar #lwe-hide-panel {
 	float: left;
 	cursor: pointer;
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/action_hidepanel.png) center no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_hidepanel.png) center no-repeat;
 	border: 0;
 	outline: 0;
 }
@@ -82,10 +82,10 @@
 
 .lwe-editable {
 	/*background-color: #ffc;*/
-	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='http://static.t4ke.com/projects/lwe/current/pic/inline_bg.png');
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='http://lwe.googlecode.com/svn/trunk/pic/inline_bg.png');
 }
 .lwe-editable[class] {
-	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/inline_bg.png);
+	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/inline_bg.png);
 }
 /*.lwe-editable:hover { background-color: #ffa }*/
 .lwe-movable {
@@ -141,11 +141,11 @@
 	background: transparent no-repeat;
 }
 .lwe-panel .move {
-	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/drag.png);
+	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/drag.png);
 	cursor: move;
 }
 .lwe-panel .delete {
-	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/delete.png);
+	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/delete.png);
 	cursor: pointer;
 }
 
@@ -169,7 +169,7 @@
 	display: block;
 	width: 43px;
 	height: 23px;
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/logo.png) bottom no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/logo.png) bottom no-repeat;
 }
 
 #lwe-loading {
@@ -177,7 +177,7 @@
 	float: left;
 	width: 16px;
 	height: 16px;
-	background: transparent url(http://static.t4ke.com/projects/lwe/current/pic/loading.gif) bottom no-repeat;
+	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/loading.gif) bottom no-repeat;
 }
 
 .lwe-clear {
