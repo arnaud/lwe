@@ -7,7 +7,8 @@
     author="Arnaud Leymet" 
     author_email="arnaud.leymet@gmail.com" />
 <Content type="html"><![CDATA[
-<object width="400" height="302"><param name="allowfullscreen" value="true" />
+<object width="400" height="302">
+  <param name="allowfullscreen" value="true" />
   <param name="allowscriptaccess" value="always" />
   <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=2701196&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=0&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" />
   <embed 
@@ -17,6 +18,7 @@
     allowscriptaccess="always" 
     width="400" 
     height="302">
+    <a href="http://vimeo.com/2701196"><img src="http://images.vimeo.com/23/74/82/237482249/237482249_506.jpg" width="400" height="285" alt="Watch Live Website Editor Demo" /></a>
   </embed>
 </object>
 ]]></Content>
