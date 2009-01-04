@@ -1058,13 +1058,14 @@ var lwe = {
 	start: function() {
 		console.group('lwe > start');
 		with(lwe.f) {
-			var path = 'http://lwe.googlecode.com/svn/trunk/';
+			var path = 'http://static.t4ke.com/projects/lwe/_current/';
 			addCSS(path + 'css/all.css');
 			addCSS(path + 'css/base.css');
 			addCSS(path + 'css/main.console.css');
 			addCSS(path + 'css/main.editor.css');
 			addCSS(path + 'css/main.history.css');
 			addCSS(path + 'css/main.tabs.css');
+			path = 'http://lwe.googlecode.com/svn/trunk/';
 			addScript(path + 'lib/jquery-1.2.6.js');
 			addScript(path + 'lib/jquery-ui-personalized-1.6b.js');
 			addScript(path + 'lib/jquery.jeditable.js');
