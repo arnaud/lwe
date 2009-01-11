@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.01.10
+ * Last update: 2009.01.11
  */
 
 var lwe_undefined;
@@ -822,27 +822,14 @@ var lwe = {
 							]
 						]
 					);
-					$(document.body).createAppend(
-						'div', {id: 'lwe-dialog', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Confirmation needed'}, [
-						  'p', {'class': 'lwe-not-editable lwe-not-draggable'}, ''
-						]
-					);
 					// add the element inspector
 					$(document.body).createAppend(
 						'div', {id: 'lwe-inspector', 'class': 'lwe-not-editable lwe-not-draggable'}, []
 					);
-					// hide some of the ui elements
-					/*$('#lwe-main-panel-container').hide();
-					$('#lwe-hide-panel').hide();
-					$('#lwe-name').hide();*/
 					// update the state of each history button
 					with(lwe.history.f) {
 						updateButtons();
 					}
-					// show the main panel when the cursor hovers the toolbar
-					$('#lwe-main-toolbar').hover(function() {
-						show();
-					},function(){});
 					/*$('#lwe-loading').hide();*/
 				}
 			},
