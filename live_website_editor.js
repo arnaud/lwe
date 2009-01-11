@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
- * v0.1d
- * Last update: 2009.01.03
+ * v0.2
+ * Last update: 2009.01.10
  */
 
 var lwe_undefined;
@@ -29,7 +29,7 @@ var lwe = {
 	/**
 	* current lwe version
 	*/
-	version: '0.1d',
+	version: '0.2',
 	/**
 	* environment variables and constants
 	*/
@@ -85,21 +85,21 @@ var lwe = {
 			with(lwe.history) {
 				// remove the last action of the 'undo history'
 				var last_undo = h_undo.pop();
-				f.removeLastActionFromGraphicalHistory('undo');
 				// then add it to the 'redo history'
 				h_redo.push({
 					action: last_undo.action,
 					element: last_undo.element,
-					info: last_undo.info
+					new_data: last_undo.new_data,
+					old_data: last_undo.old_data
 				});
-				f.addActionInGraphicalHistory('redo', last_undo.action, last_undo.element, last_undo.info);
 				console.debug(last_undo);
 				// do the effective rollback
 				switch(last_undo.action) {
 					case 'edit-text':
-						f.undoTextEdit(last_undo.element, last_undo.info);
+						f.undoTextEdit(last_undo.element, last_undo.old_data);
 						break;
 				}
+			  //lwe.f.notification('Last modification was undone');
 				console.warn('TODO: handle all the cases');
 				//TODO
 				// update the buttons visibility/usability
@@ -119,21 +119,21 @@ var lwe = {
 			with(lwe.history) {
 				// remove the last action of the 'redo history'
 				var last_redo = h_redo.pop();
-				f.removeLastActionFromGraphicalHistory('redo');
 				// then add it to the 'undo history'
 				h_undo.push({
 					action: last_redo.action,
 					element: last_redo.element,
-					info: last_redo.info
+					new_data: last_redo.new_data,
+					old_data: last_redo.old_data
 				});
-				f.addActionInGraphicalHistory('undo', last_redo.action, last_redo.element, last_redo.info);
 				console.debug(last_redo);
 				// do the effective rollback
 				switch(last_redo.action) {
 					case 'edit-text':
-						f.redoTextEdit(last_redo.element, last_redo.info);
+						f.redoTextEdit(last_redo.element, last_redo.new_data);
 						break;
 				}
+			  //lwe.f.notification('Last undone modification was redone');
 				console.warn('TODO: handle all the cases');
 				//TODO
 				// update the buttons visibility/usability
@@ -148,8 +148,8 @@ var lwe = {
 		/**
 		* undo all the changes
 		*/
-		revert: function(action, element, info) {
-			console.group('revert %o %o %o', action, element, info);
+		revert: function(action, element, old_data) {
+			console.group('revert %o %o %o', action, element, old_data);
 			with(lwe.history) {
 				// for all the 'undo history' actions
 				while(h_undo.length > 0) {
@@ -177,14 +177,9 @@ var lwe = {
 		load: function() {
 			console.group('load');
 			with(lwe.history) {
-				if(h_undo.length == 0) {
-				// if the page is untouched
-					f.applyPersistedHistory();
-					f.updateButtons();
-				} else {
-				// if the page has known some modifications
-					alert('The loading of the persisted state can\'t work on a modified page.');
-				}
+			  revert();
+				f.applyPersistedHistory();
+				f.updateButtons();
 			}
 			// cleaning the presentation
 			with(lwe.f) {
@@ -198,19 +193,18 @@ var lwe = {
 		/**
 		* add an history action
 		*/
-		add: function(action, element, info) {
-			console.debug('add %o %o %o', action, element, info);
+		add: function(action, element, new_data, old_data) {
+			console.debug('add %o %o %o', action, element, new_data, old_data);
 			with(lwe.history) {
 				// reset the redo history
 				h_redo = [];
-				f.resetGraphicalHistory('redo');
 				// add the new history action
 				h_undo.push({
 					action: action,
 					element: element,
-					info: info
+					new_data: new_data,
+					old_data: old_data
 				});
-				f.addActionInGraphicalHistory('undo', action, element, info);
 				// enable the undo and action buttons
 				f.enableButton('undo');
 				f.enableButton('save');
@@ -231,6 +225,7 @@ var lwe = {
 					}
 					store.set('history', JSON.stringify(h_undo));
 					console.info('Persisted the history (' + h_undo.length + ' actions)');
+			    lwe.f.notification('The current state of this page is now saved<br/>('+h_undo.length+' modifications)');
 				}
 			},
 			/**
@@ -245,28 +240,27 @@ var lwe = {
 					// get the 'undo history' back
 					store.get('history', function(ok, val) {
 						if(ok) {
+							h_redo = [];
 							h_undo = [];
 							h_undo = JSON.parse(val.value);
 							console.info('Persisted the history back ('+h_undo.length+' actions)');
+			        lwe.f.notification('Loaded the last state of this page<br/>('+h_undo.length+' modifications)');
 						} else {
 							console.error('Couldn\'t get persisted history back!');
 						}
 					});
-					// update the graphical history display
-					f.resetGraphicalHistory('redo');
-					f.updateGraphicalHistory('undo');
 					// apply all the actions of the 'undo history'
 					for(var i=0; i<h_undo.length; i++) {
 						var action = h_undo[i];
 						switch(action.action) {
 							case 'edit-text':
-								f.redoTextEdit(action.element, action.info);
+								f.redoTextEdit(action.element, action.new_data);
 								break;
 							case 'delete':
-								f.redoDelete(action.element, action.info);
+								f.redoDelete(action.element, action.new_data);
 								break;
 							case 'drag':
-								f.redoDrag(action.element, action.info);
+								f.redoDrag(action.element, action.new_data);
 								break;
 							default:
 								console.warn('TODO: handle all the cases: %o', action.action);
@@ -293,40 +287,45 @@ var lwe = {
 				}
 				
 			},
-			undoDelete: function(element, info) {
-				console.debug('undoDelete %o %o', element, info);
+			undoDelete: function(element, old_data) {
+				console.debug('undoDelete %o %o', element, old_data);
+				$(element).effect('highlight');
 				$(element).show();
 			},
-			undoDrag: function(element, info) {
-				console.debug('undoDrag %o %o', element, info);
-				console.warn('TODO: handle the undoDrag function');
-				//TODO
+			undoDrag: function(element, old_data) {
+				console.debug('undoDrag %o %o', element, old_data);
+				$(element).effect('highlight');
+				$(element).css('left', old_data.x);
+				$(element).css('top', old_data.y);
 			},
-			undoTextEdit: function(element, info) {
-				console.debug('undoTextEdit %o %o', element, info);
-				console.warn('TODO: handle the undoTextEdit function');
-				//TODO
+			undoTextEdit: function(element, old_data) {
+				console.debug('undoTextEdit %o %o', element, old_data);
+				$(element).effect('highlight');
+				$(element).html(old_data);
 			},
-			undoImageChange: function(element, info) {
-				console.debug('undoImageChange %o %o', element, info);
+			undoImageChange: function(element, old_data) {
+				console.debug('undoImageChange %o %o', element, old_data);
 				console.warn('TODO: handle the undoImageChange function');
 				//TODO
 			},
-			redoDelete: function(element, info) {
-				console.debug('redoDelete %o %o', element, info);
+			redoDelete: function(element, new_data) {
+				console.debug('redoDelete %o %o', element, new_data);
+				$(element).effect('highlight');
 				$(element).hide();
 			},
-			redoDrag: function(element, info) {
-				console.debug('redoDrag %o %o', element, info);
-				$(element).css('left', info.x);
-				$(element).css('top', info.y);
+			redoDrag: function(element, new_data) {
+				console.debug('redoDrag %o %o', element, new_data);
+				$(element).effect('highlight');
+				$(element).css('left', new_data.x);
+				$(element).css('top', new_data.y);
 			},
-			redoTextEdit: function(element, info) {
-				console.debug('redoTextEdit %o %o', element, info);
-				$(element).html(info);
+			redoTextEdit: function(element, new_data) {
+				console.debug('redoTextEdit %o %o', element, new_data);
+				$(element).effect('highlight');
+				$(element).html(new_data);
 			},
-			redoImageChange: function(element, info) {
-				console.debug('redoImageChange %o %o', element, info);
+			redoImageChange: function(element, new_data) {
+				console.debug('redoImageChange %o %o', element, new_data);
 				console.warn('TODO: handle the redoImageChange function');
 				//TODO
 			},
@@ -336,7 +335,7 @@ var lwe = {
 			enableButton: function(name) {
 				console.debug('enableButton', name);
 				$('#lwe-'+name).removeAttr('disabled');
-				$('#lwe-'+name).parent().removeClass('disabled');
+				$('#lwe-'+name).removeClass('disabled');
 			},
 			/**
 			* disable the button which id is 'lwe-<name>'
@@ -344,7 +343,7 @@ var lwe = {
 			disableButton: function(name) {
 				console.debug('disableButton', name);
 				$('#lwe-'+name).attr('disabled', 'disabled');
-				$('#lwe-'+name).parent().addClass('disabled');
+				$('#lwe-'+name).addClass('disabled');
 			},
 			/**
 			* disable all buttons
@@ -356,6 +355,7 @@ var lwe = {
 					disableButton('redo');
 					disableButton('save');
 					disableButton('load');
+					disableButton('delete');
 				}
 			},
 			/**
@@ -368,55 +368,6 @@ var lwe = {
 					f.checkPersistedHistory();
 					if(h_undo.length > 0) f.enableButton('undo');
 					if(h_redo.length > 0) f.enableButton('redo');
-				}
-			},
-			/**
-			* add an action in the graphical 'history_type' history (either the 'undo' or the 'redo')
-			*/
-			addActionInGraphicalHistory: function(history_type, action, element, info) {
-				console.debug('addActionInGraphicalHistory %o %o %o', history_type, action, element);
-				var showable_info = (info.length > 32) ? info.substr(0,30)+'...' : info;
-				try {
-					$('#lwe-history-'+history_type+'-actions').createPrepend('div', {'class': 'lwe-'+history_type+' lwe-'+history_type+'-'+action+' lwe-not-editable lwe-not-draggable', style: 'display: none',title: info}, action+': '+showable_info);
-					$('#lwe-history-'+history_type+'-actions > div.lwe-'+history_type+':first-child').show('slow');
-					// make the scrollbar position at the bottom
-					//$('#lwe-history-'+history_type).scrollTop(99999999);
-				} catch(e) {}
-			},
-			/**
-			* reset the graphical 'history_type' history (either the 'undo' or the 'redo')
-			* by removing all action occurrences of this history
-			*/
-			resetGraphicalHistory: function(history_type) {
-				console.debug('resetGraphicalHistory %o', history_type);
-				$('#lwe-history-'+history_type+'-actions > div.lwe-'+history_type).remove();
-			},
-			/**
-			* remove the last action occurrence of the graphical 'history_type' history (either the 'undo' or the 'redo')
-			*/
-			removeLastActionFromGraphicalHistory: function(history_type) {
-				console.debug('removeLastActionFromGraphicalHistory %o', history_type);
-				$('#lwe-history-'+history_type+'-actions > div.lwe-'+history_type+':first-child').remove();//hide('slow');
-			},
-			/**
-			* update the graphical 'history_type' history (either the 'undo' or the 'redo')
-			*/
-			updateGraphicalHistory: function(history_type) {
-				console.debug('updateGraphicalHistory %o', history_type);
-				with(lwe.history) {
-					var history;
-					switch(history_type) {
-						case 'undo':
-							history = h_undo;
-							break;
-						case 'redo':
-							history = h_redo;
-							break;
-					}
-					for(var i=0; i<history.length; i++) {
-						var action = history[i];
-						f.addActionInGraphicalHistory(history_type, action.action, action.element, action.info);
-					}
 				}
 			}
 		}
@@ -455,7 +406,7 @@ var lwe = {
 		*/
 		f: {
 			/**
-			* get the current time (format is hh:mm:ss/24)
+			* get the current time (format is hh:mm:ss.ms/24)
 			*/
 			getCurrentTime: function() {
 				var currentTime = new Date();
@@ -468,7 +419,12 @@ var lwe = {
 				var seconds = currentTime.getSeconds();
 				if (seconds < 10)
 					seconds = '0' + seconds;
-				return hours + ':' + minutes + ':' + seconds;
+				var milliseconds = currentTime.getMilliseconds();
+				if (milliseconds < 100)
+					milliseconds = '0' + milliseconds;
+				else if (milliseconds < 10)
+					milliseconds = '00' + milliseconds;
+				return hours + ':' + minutes + ':' + seconds + '.' + milliseconds;
 			},
 			/**
 			* get the current date (format is dd/mm/yyyy)
@@ -509,6 +465,7 @@ var lwe = {
 			var e = document.createElement('script');
 			e.setAttribute('src', src);
 			e.setAttribute('type', 'text/javascript');
+			e.setAttribute('class', 'lwe-script');
 			document.body.appendChild(e);
 		},
 		/**
@@ -520,8 +477,28 @@ var lwe = {
 			e.setAttribute('href', src);
 			e.setAttribute('type', 'text/css');
 			e.setAttribute('rel', 'stylesheet');
+			e.setAttribute('class', 'lwe-stylesheet');
 			document.getElementsByTagName('head')[0].appendChild(e);
 		},
+		/*
+		* remove all the additional elements: css, js, etc.
+		*/
+		removeAdditionalElements: function() {
+			console.debug('removeAdditionalElements');
+			$('.lwe-stylesheet').remove();
+			$('.lwe-script').remove();
+			$('#lwe-inspector').remove();
+			$('#jGrowl').remove();
+		},
+  	/**
+  	* create a notification with jGrowl
+  	*/
+  	notification: function(message) {
+  		console.group('lwe > notification', message);
+  		$.jGrowl.defaults.closer = false;
+  		$.jGrowl(message, { header: 'Live Website Editor' });
+  		console.groupEnd();
+  	},
 		/**
 		* enable the inspector
 		*/
@@ -557,7 +534,7 @@ var lwe = {
 			console.debug('markEditableElements');
 			with(lwe) {
 				$.each(env.editable_text_elements, function(i, elmts) {
-					$(elmts).not('.lwe-not-editable').not(":empty").addClass('lwe-editable');
+					$(elmts).not('.lwe-not-editable').not('.jGrowl').not(":empty").addClass('lwe-editable');
 				});
 			}
 		},
@@ -575,7 +552,7 @@ var lwe = {
 			console.debug('markDraggableElements');
 			with(lwe) {
 				$.each(env.draggable_elements, function(i, elmts) {
-					$(elmts).not('.lwe-not-draggable').addClass('lwe-draggable');
+					$(elmts).not('.lwe-not-draggable').not('.jGrowl').addClass('lwe-draggable');
 				});
 			}
 		},
@@ -584,7 +561,7 @@ var lwe = {
 		*/
 		unmarkDraggableElements: function() {
 			console.debug('unmarkDraggableElements');
-			$('.lwe-draggable').removeClass('lwe-draggable');
+			$('.lwe-draggable').removeClass('lwe-draggable').removeClass('ui-draggable');
 		},
 		/**
 		* applies the inline editing effect to all marked editable elements
@@ -595,11 +572,12 @@ var lwe = {
 				$('.lwe-editable').editable(
 					function(value, settings) { 
 						var uid = getElementUniqueId($(this));
-						lwe.history.add('edit-text', uid, value);
+						lwe.history.add('edit-text', uid, value, this.revert);
 						return(value);
 					},
 					{
 						cssclass : 'lwe-editable-textarea',
+						event : 'dblclick',
 						type: 'autogrow',
 						onblur: 'submit',
 						autogrow: {
@@ -649,15 +627,6 @@ var lwe = {
 			console.group('applyDraggableElements');
 			with(lwe.f) {
 				console.group('lwe-draggable objects list');
-				$('.lwe-draggable').each(function(i, elmt) {
-					//console.log(i, elmt);
-					$(this).createAppend(
-						'div', {'class': 'lwe-panel'}, [
-							//'div', {'class': 'move', title: 'Drag this box'}, [],
-							'div', {'class': 'delete', title: 'Delete this box', onclick: 'lwe.action.remove(this)'}, [],
-						]
-					);
-				});
 				$('.lwe-draggable').draggable({ /*handle: 'div'*/});
 				console.groupEnd();
 				deactivateLinks($('.lwe-draggable'));
@@ -843,112 +812,28 @@ var lwe = {
 					$(document.body).createAppend(
 						'div', {id: 'lwe-main-panel', 'class': 'lwe-not-editable lwe-not-draggable'}, [
 							'div', {id: 'lwe-main-panel-container', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-								// editor panel
-								'div', {id: 'lwe-editor', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-									/*'div', {id: 'lwe-loading', 'class': 'lwe-not-editable lwe-not-draggable'}, [],*/
-									'div', {id: 'lwe-presentation', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'h1', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Live Website Editor',
-										'p', {'class': 'lwe-presentation-text lwe-not-editable lwe-not-draggable'}, 'Live Website Editor, as a lightweight yet powerful online website editor, helps you edit your site inplace.',
-										'p', {'class': 'lwe-presentation-text lwe-not-editable lwe-not-draggable'}, 'It can be used for preparing demos for example, as for removing/modifying sensitive data.'
-									],
-									'div', {id: 'lwe-editor-actions', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'p', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Select editing mode:',
-										'input', {id: 'lwe-mode-1', type: 'radio', 'class': 'lwe-not-editable lwe-not-draggable', name: 'lwe-mode', title: 'Deactivate Live Editing', value: 'none', checked: 'checked', onchange: 'lwe.switch_mode(this.value)'}, [],
-										'label', {'for': 'lwe-mode-1', 'class': 'selected lwe-not-editable lwe-not-draggable'}, 'Deactivate Live Editing',
-										'input', {id: 'lwe-mode-2', type: 'radio', 'class': 'lwe-not-editable lwe-not-draggable', name: 'lwe-mode', title: 'Activate Text Editing', value: 'text_editing', onchange: 'lwe.switch_mode(this.value)'}, [],
-										'label', {'for': 'lwe-mode-2', 'class': 'lwe-not-editable lwe-not-draggable'}, 'Activate Text Editing',
-										'input', {id: 'lwe-mode-3', type: 'radio', 'class': 'lwe-not-editable lwe-not-draggable', name: 'lwe-mode', title: 'Activate Box Editing', value: 'box_editing', onchange: 'lwe.switch_mode(this.value)'}, [],
-										'label', {'for': 'lwe-mode-3', 'class': 'lwe-not-editable lwe-not-draggable'}, 'Activate Box Editing'
-									]
-								],
-								// history panel
-								'div', {id: 'lwe-history', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-									'div', {'class': 'lwe-button lwe-not-editable lwe-not-draggable'}, [
-										'input', {id: 'lwe-save', type: 'button', 'class': 'lwe-not-editable lwe-not-draggable', alt: 'save', title: 'Save the current state', onclick: 'lwe.history.save()'}, [],
-										'label', {'for': 'lwe-save', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-											'b', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Save',
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, ' the current state'
-										]
-									],
-									'div', {'class': 'lwe-button lwe-not-editable lwe-not-draggable'}, [
-										'input', {id: 'lwe-load', type: 'button', 'class': 'lwe-not-editable lwe-not-draggable', alt: 'load', title: 'Load the persisted state', onclick: 'lwe.history.load()'}, [],
-										'label', {'for': 'lwe-load', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-											'b', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Load',
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, ' the persisted data'
-										]
-									],
-									'div', {'class': 'lwe-button lwe-not-editable lwe-not-draggable'}, [
-										'input', {id: 'lwe-undo', type: 'button', 'class': 'lwe-not-editable lwe-not-draggable', alt: 'undo', title: 'Undo the last change', onclick: 'lwe.history.undo()'}, [],
-										'label', {'for': 'lwe-undo', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-											'b', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Undo',
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, ' the last action'
-										]
-									],
-									'div', {'class': 'lwe-button lwe-not-editable lwe-not-draggable'}, [
-										'input', {id: 'lwe-redo', type: 'button', 'class': 'lwe-not-editable lwe-not-draggable', alt: 'redo', title: 'Redo the last change', onclick: 'lwe.history.redo()'}, [],
-										'label', {'for': 'lwe-redo', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-											'b', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Redo',
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, ' the last action'
-										]
-									],
-									'div', {id: 'lwe-history-undo', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'p', {'class': 'lwe-box-title lwe-not-editable lwe-not-draggable'}, 'Undo history',
-										'div', {id: 'lwe-history-undo-actions', 'class': 'lwe-not-editable lwe-not-draggable'}, []
-									],
-									'div', {id: 'lwe-history-redo', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'p', {'class': 'lwe-box-title lwe-not-editable lwe-not-draggable'}, 'Redo history',
-										'div', {id: 'lwe-history-redo-actions', 'class': 'lwe-not-editable lwe-not-draggable'}, []
-									]
-								],
-								// console panel
-								'div', {id: 'lwe-console', 'class': 'lwe-not-editable lwe-not-draggable'}, []
-							],
-							// main toolbar
-							'div', {id: 'lwe-main-toolbar', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-								'input', {id: 'lwe-hide-panel', type: 'button', 'class': 'lwe-not-editable lwe-not-draggable', alt: 'hide', title: 'Hide the panel', onclick: 'lwe.panel.hide()'}, [],
-								'ul', {'class': 'lwe-not-editable lwe-not-draggable'}, [
-									'li', {'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'a', {href: '#lwe-editor', 'class': 'lwe-not-editable lwe-not-draggable lwe-keep-link'}, [
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Editor'
-										]
-									],
-									'li', {'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'a', {href: '#lwe-history', 'class': 'lwe-not-editable lwe-not-draggable lwe-keep-link'}, [
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, 'History'
-										]
-									],
-									'li', {'class': 'lwe-not-editable lwe-not-draggable'}, [
-										'a', {href: '#lwe-console', 'class': 'lwe-not-editable lwe-not-draggable lwe-keep-link'}, [
-											'span', {'class': 'lwe-not-editable lwe-not-draggable'}, 'Console'
-										]
-									]
-								],
-								'span', {id: 'lwe-name', 'class': 'lwe-not-editable lwe-not-draggable'}, 'live website editor ' + lwe.version,
-								'div', {'class': 'lwe-clear lwe-not-editable lwe-not-draggable'}, []
+								'input', {id: 'lwe-undo', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'undo', title: 'Undo the last change', onclick: 'lwe.history.undo()'}, [],
+								'input', {id: 'lwe-redo', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'redo', title: 'Redo the last change', onclick: 'lwe.history.redo()'}, [],
+							  'input', {id: 'lwe-save', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'save', title: 'Save the current state', onclick: 'lwe.history.save()'}, [],
+								'input', {id: 'lwe-load', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'load', title: 'Load the persisted state', onclick: 'lwe.history.load()'}, [],
+								/*'input', {id: 'lwe-delete', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'delete', title: 'Delete the the current element', onclick: 'lwe.action.remove(this)'}, [],*/
+								'span', {'id': 'lwe-title', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Live Website Editor'}, 'LWE v'+lwe.version
 							]
 						]
 					);
-					// handle mode selection
-					$('#lwe-editor-actions > label').click(function() {
-						$('#lwe-editor-actions > label').removeClass("selected");
-						$(this).addClass("selected");
-					});
-					// add the firebug message if needed
-					if(lwe.env.firebug_on) {
-						lwe.console.add('info', 'Firebug is enabled on this page.');
-						lwe.console.add('info', 'You can access the logs in its console tab.');
-					}
+					$(document.body).createAppend(
+						'div', {id: 'lwe-dialog', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Confirmation needed'}, [
+						  'p', {'class': 'lwe-not-editable lwe-not-draggable'}, ''
+						]
+					);
 					// add the element inspector
 					$(document.body).createAppend(
 						'div', {id: 'lwe-inspector', 'class': 'lwe-not-editable lwe-not-draggable'}, []
 					);
-					// activate main tabs then select first
-					$('#lwe-main-toolbar > ul').tabs();
-					$('#lwe-main-toolbar > ul').tabs('select', 0);
 					// hide some of the ui elements
-					$('#lwe-main-panel-container').hide();
+					/*$('#lwe-main-panel-container').hide();
 					$('#lwe-hide-panel').hide();
-					$('#lwe-name').hide();
+					$('#lwe-name').hide();*/
 					// update the state of each history button
 					with(lwe.history.f) {
 						updateButtons();
@@ -1010,9 +895,11 @@ var lwe = {
 			console.debug('drag');
 			var element = $(elmt);
 			var uid = lwe.f.getElementUniqueId(element);
-			var pos = {x: element.css('left'), y: element.css('top')};
-			var info = JSON.stringify(pos);
-			lwe.history.add('drag', uid, info);
+			var new_data = JSON.stringify( {x: element.css('left'), y: element.css('top')} );
+			var old_data = JSON.stringify( {x: element.css('left'), y: element.css('top')} );
+			console.warn('TODO: get the correct old value');
+			//TODO
+			lwe.history.add('drag', uid, new_data, old_data);
 		}
 	},
 	/**
@@ -1020,34 +907,27 @@ var lwe = {
 	*/
 	switch_mode: function(mode) {
 		console.group('lwe > switch mode', mode);
+		if(mode==null) mode = 'editing';
 		with(lwe.f) {
 			set_loading(true);
-			if(mode != lwe.env.current_mode) {
-				// unapply and unmark
-				if(lwe.env.current_mode=='none') {
-					unapplyEditableElements();
-					unmarkEditableElements();
-					unapplyDraggableElements();
-					unmarkDraggableElements();
-				} else if(lwe.env.current_mode=='text_editing') {
-					unapplyEditableElements();
-					unmarkEditableElements();
-				} else if(lwe.env.current_mode=='box_editing') {
-					unapplyDraggableElements();
-					unmarkDraggableElements();
-				}
-				// apply and mark
-				if(mode=='none') {
-					
-				} else if(mode=='text_editing') {
-					markEditableElements();
-					applyEditableElements();
-				} else if(mode=='box_editing') {
-					markDraggableElements();
-					applyDraggableElements();
-				}
-				lwe.env.current_mode = mode;
+			if(mode=='editing') {
+			  notification('<b>This webpage is now editable!</b>');
+			  // text editing activation
+				markEditableElements();
+				applyEditableElements();
+				// box editing activation
+				//markDraggableElements();
+				//applyDraggableElements();
+			} else {
+			  notification('This webpage is no longer editable');
+			  // text editing deactivation
+				unapplyEditableElements();
+				unmarkEditableElements();
+				// box editing deactivation
+				unapplyDraggableElements();
+				unmarkDraggableElements();
 			}
+		  lwe.env.current_mode = mode;
 			set_loading(false);
 		}
 		console.groupEnd();
@@ -1058,16 +938,13 @@ var lwe = {
 	start: function() {
 		console.group('lwe > start');
 		with(lwe.f) {
-			var path = 'http://static.t4ke.com/projects/lwe/_current/';
-			addCSS(path + 'css/all.css');
-			addCSS(path + 'css/base.css');
-			addCSS(path + 'css/main.console.css');
-			addCSS(path + 'css/main.editor.css');
-			addCSS(path + 'css/main.history.css');
-			addCSS(path + 'css/main.tabs.css');
+			var path = 'http://static.t4ke.com/projects/lwe/current/';
+			//var path = 'http://localhost/lwe/';
+			addCSS(path + 'css/lwe.css');
+			addCSS(path + 'css/jquery.jgrowl.css');
 			path = 'http://lwe.googlecode.com/svn/trunk/';
-			addScript(path + 'lib/jquery-1.2.6.js');
-			addScript(path + 'lib/jquery-ui-personalized-1.6b.js');
+			addScript(path + 'lib/jquery-1.2.6.min.js');
+			addScript(path + 'lib/jquery-ui-personalized-1.6rc4.packed.js');
 			addScript(path + 'lib/jquery.jeditable.js');
 			addScript(path + 'lib/jquery.jeditable.autogrow.js');
 			addScript(path + 'lib/jquery.autogrow.js');
@@ -1076,7 +953,9 @@ var lwe = {
 			addScript(path + 'lib/jquery.flydom-3.1.1.js');
 			addScript(path + 'lib/persist.js');
 			addScript(path + 'lib/json2.js');
+			addScript(path + 'lib/jquery.jgrowl.js');
 			wait_until_ready(lwe.panel.f.create_main_panel);
+			wait_until_ready(lwe.switch_mode);
 		}
 		console.groupEnd();
 	},
@@ -1088,6 +967,7 @@ var lwe = {
 		with(lwe) {
 			switch_mode('none');
 			panel.f.remove_main_panel();
+			f.removeAdditionalElements();
 		}
 		lwe = lwe_undefined;
 		console.groupEnd();

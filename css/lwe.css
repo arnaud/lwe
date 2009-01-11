@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
- * v0.1d
- * Last update: 2008.08.31
+ * v0.2
+ * Last update: 2009.01.10
  * - stylesheet -
  */
 
@@ -29,55 +29,21 @@
 	outline: 0;
 }
 #lwe-main-panel {
+  background: #fff;
 	position: fixed;
-	top: 0;
-	right: 0;
+	bottom: 0;
+	left: 0;
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif;
-	/*background: #e8e8e8 url(http://lwe.googlecode.com/svn/trunk/pic/panel.bg.left.gif) bottom left no-repeat;
-	padding-left: 9px;
-	line-height: 30px;*/
 }
 #lwe-main-panel-container {
-	height: 150px;
-	width: 500px;
 	border: 1px solid #e8e8e8;
 	padding: 2px;
-	/*background: #e8e8e8 url(http://lwe.googlecode.com/svn/trunk/pic/panel.bg.bottom.png) bottom repeat-x;
-	padding-bottom: 5px;*/
 }
-#lwe-main-panel select {
-	border: 1px solid transparent;
+#lwe-title {
+  font-size: 0.9em;
+  color: grey;
+  font-weight: bold;
 }
-#lwe-main-panel select {
-	border-color: #515151;
-	cursor: pointer;
-}
-#lwe-main-toolbar #lwe-hide-panel {
-	float: left;
-	cursor: pointer;
-	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/action_hidepanel.png) center no-repeat;
-	border: 0;
-	outline: 0;
-}
-
-
-/*
-#lwe-history-panel {
-	position: fixed;
-	top: 40px;
-	right: 0;
-	font-family: "Lucida Grande","Lucida Sans Unicode",Arial,sans-serif;
-	background: #e8e8e8 bottom left no-repeat;
-	border: solid 1px #515151;
-	border-right: 0;
-}
-#lwe-history-container {
-	background: #e8e8e8 bottom repeat-x;
-	padding: 5px 2px;
-	width: 200px;
-	min-height: 350px;
-}*/
-
 
 
 .lwe-editable {
@@ -85,7 +51,7 @@
 	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='http://lwe.googlecode.com/svn/trunk/pic/inline_bg.png');
 }
 .lwe-editable[class] {
-	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/inline_bg.png);
+	/*background-image: url(http://lwe.googlecode.com/svn/trunk/pic/inline_bg.png);*/
 }
 /*.lwe-editable:hover { background-color: #ffa }*/
 .lwe-movable {
@@ -95,8 +61,12 @@
 	border-color: #4d4;
 }
 
-.lwe-editable-textarea {
+.lwe-editable>.lwe-editable-textarea {
 	display: inline;
+}
+
+.lwe-editable>.lwe-editable-textarea>textarea {
+  display: inline;
 }
 
 #lwe-inspector {
@@ -132,23 +102,6 @@
 }*/
 
 
-.lwe-panel .move,
-.lwe-panel .delete {
-	display: none;
-	width: 16px;
-	height: 16px;
-	padding: 2px;
-	background: transparent no-repeat;
-}
-.lwe-panel .move {
-	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/drag.png);
-	cursor: move;
-}
-.lwe-panel .delete {
-	background-image: url(http://lwe.googlecode.com/svn/trunk/pic/delete.png);
-	cursor: pointer;
-}
-
 .lwe-draggable {
 	cursor: move;
 }
@@ -160,17 +113,10 @@
 	/*top: -24px;
 	right: 18px*/
 }
-.lwe-draggable:hover .lwe-panel,
+/*.lwe-draggable:hover .lwe-panel,
 .lwe-draggable:hover .lwe-panel * {
 	display: block;
-}
-
-#lwe-logo {
-	display: block;
-	width: 43px;
-	height: 23px;
-	background: transparent url(http://lwe.googlecode.com/svn/trunk/pic/logo.png) bottom no-repeat;
-}
+}*/
 
 #lwe-loading {
 	display: block;
@@ -182,4 +128,47 @@
 
 .lwe-clear {
 	clear: both;
+}
+
+
+.lwe-button {
+	border: 1px solid transparent;
+	width: 24px;
+	height: 24px;
+	background-color: transparent;
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+	/*url(http://lwe.googlecode.com/svn/trunk/pic/action_undo.png)*/
+#lwe-undo {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.undo.png);
+}
+#lwe-undo.disabled {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.undo.inactive.png);
+}
+#lwe-redo {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.redo.png);
+}
+#lwe-redo.disabled {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.redo.inactive.png);
+}
+#lwe-save {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.save.png);
+}
+#lwe-save.disabled {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.save.inactive.png);
+}
+#lwe-load {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.load.png);
+}
+#lwe-load.disabled {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.load.inactive.png);
+}
+#lwe-delete {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.delete.png);
+}
+#lwe-delete.disabled {
+	background-image: url(http://static.t4ke.com/projects/lwe/current/pic/action.delete.inactive.png);
 }
