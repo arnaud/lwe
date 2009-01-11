@@ -952,7 +952,7 @@ var lwe = {
 		console.group('lwe > start_when_ready');
 		with(lwe) {
   		panel.f.create_main_panel();
-  		switch_mode('edit');
+  		switch_mode('editing');
 	  }
 		console.groupEnd();
 	},
