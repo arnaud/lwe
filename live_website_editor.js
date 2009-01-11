@@ -951,9 +951,9 @@ var lwe = {
 			addScript(path + 'lib/jquery.jeditable.ajaxupload.js');
 			addScript(path + 'lib/jquery.ajaxfileupload.js');
 			addScript(path + 'lib/jquery.flydom-3.1.1.js');
-			addScript(path + 'lib/persist.js');
-			addScript(path + 'lib/json2.js');
 			addScript(path + 'lib/jquery.jgrowl.js');
+			addScript(path + 'lib/json2.js');
+			addScript(path + 'lib/persist.js');
 			wait_until_ready(lwe.panel.f.create_main_panel);
 			wait_until_ready(lwe.switch_mode);
 		}
