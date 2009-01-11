@@ -692,8 +692,9 @@ var lwe = {
 		wait_until_ready: function(fn) {
 			console.debug('wait_until_ready');
 			var is_jquery_ready = ((typeof($) == 'function') && (typeof($(document).createAppend) == 'function'));
+			var is_jgrowl_ready = (typeof($.jGrowl) == 'function');
 			var is_persist_ready = (typeof(Persist) == 'object');
-			var is_ready = is_jquery_ready && is_persist_ready;
+			var is_ready = is_jquery_ready && is_jgrowl_ready && is_persist_ready;
 			if(is_ready)
 				fn();
 			else
