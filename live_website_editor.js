@@ -895,7 +895,6 @@ var lwe = {
 	*/
 	switch_mode: function(mode) {
 		console.group('lwe > switch mode', mode);
-		if(mode==null) mode = 'editing';
 		with(lwe.f) {
 			set_loading(true);
 			if(mode=='editing') {
@@ -942,9 +941,19 @@ var lwe = {
 			addScript(path + 'lib/jquery.jgrowl.js');
 			addScript(path + 'lib/json2.js');
 			addScript(path + 'lib/persist.js');
-			wait_until_ready(lwe.panel.f.create_main_panel);
-			wait_until_ready(lwe.switch_mode);
+			wait_until_ready(lwe.start_when_ready);
 		}
+		console.groupEnd();
+	},
+	/**
+	* when ready, creates the main panel and switches to 'editable mode'
+	*/
+	start_when_ready: function() {
+		console.group('lwe > start_when_ready');
+		with(lwe) {
+  		panel.f.create_main_panel();
+  		switch_mode('edit');
+	  }
 		console.groupEnd();
 	},
 	/**
