@@ -148,8 +148,8 @@ var lwe = {
 		/**
 		* undo all the changes
 		*/
-		revert: function(action, element, old_data) {
-			console.group('revert %o %o %o', action, element, old_data);
+		revert: function() {
+			console.group('revert');
 			with(lwe.history) {
 				// for all the 'undo history' actions
 				while(h_undo.length > 0) {
@@ -395,9 +395,7 @@ var lwe = {
 						var message = '<span class="lwe-not-editable lwe-not-draggable" title="'+date_and_time+'">'+time+'</span> ';
 						message += formatMessageArguments(args);
 					}
-					$('#lwe-console').createAppend('div', {'class': 'lwe-'+type+' lwe-not-editable lwe-not-draggable'}, message);
-					// make the scrollbar position at the bottom
-					$('#lwe-console').scrollTop(99999999);
+			    //lwe.f.notification(message);
 				} catch(e) {}
 			}
 		},
@@ -832,6 +830,9 @@ var lwe = {
 					}
 					/*$('#lwe-loading').hide();*/
 				}
+			  if($.browser.msie) {
+			    $('#jGrowl').css('position', 'absolute');
+		    }
 			},
 			/**
 			* removes the lwe main panel
@@ -930,7 +931,7 @@ var lwe = {
 			addCSS(path + 'css/lwe.css');
 			addCSS(path + 'css/jquery.jgrowl.css');
 			path = 'http://lwe.googlecode.com/svn/trunk/';
-			addScript(path + 'lib/jquery-1.2.6.min.js');
+			addScript(path + 'lib/jquery-1.3.min.js');
 			addScript(path + 'lib/jquery-ui-personalized-1.6rc4.packed.js');
 			addScript(path + 'lib/jquery.jeditable.js');
 			addScript(path + 'lib/jquery.jeditable.autogrow.js');
