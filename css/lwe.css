@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.01.10
+ * Last update: 2009.01.14
  * - stylesheet -
  */
 
@@ -43,6 +43,9 @@
   font-size: 0.9em;
   color: grey;
   font-weight: bold;
+}
+#lwe-title sup {
+  font-weight: normal;
 }
 
 

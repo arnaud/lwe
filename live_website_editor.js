@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.01.11
+ * Last update: 2009.01.14
  */
 
 var lwe_undefined;
@@ -816,7 +816,7 @@ var lwe = {
 							  'input', {id: 'lwe-save', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'save', title: 'Save the current state', onclick: 'lwe.history.save()'}, [],
 								'input', {id: 'lwe-load', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'load', title: 'Load the persisted state', onclick: 'lwe.history.load()'}, [],
 								/*'input', {id: 'lwe-delete', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'delete', title: 'Delete the the current element', onclick: 'lwe.action.remove(this)'}, [],*/
-								'span', {'id': 'lwe-title', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Live Website Editor'}, 'LWE v'+lwe.version
+								'span', {'id': 'lwe-title', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Live Website Editor'}, 'LWE v'+lwe.version+'<sup>(beta)</sup>'
 							]
 						]
 					);
