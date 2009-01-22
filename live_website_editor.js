@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.01.14
+ * Last update: 2009.01.22
  */
 
 var lwe_undefined;
@@ -239,10 +239,17 @@ var lwe = {
 					}
 					// get the 'undo history' back
 					store.get('history', function(ok, val) {
+  				  if ((typeof(val)=='object') && (val.value.length > 0)) { // FF
+  				    var pval = val.value;
+  				  } else if (val.length > 0) { // IE
+  				    var pval = val;
+  				  } else {
+  				    ok = false;
+  				  }
 						if(ok) {
 							h_redo = [];
 							h_undo = [];
-							h_undo = JSON.parse(val.value);
+							h_undo = JSON.parse(pval);
 							console.info('Persisted the history back ('+h_undo.length+' actions)');
 			        lwe.f.notification('Loaded the last state of this page<br/>('+h_undo.length+' modifications)');
 						} else {
@@ -685,18 +692,43 @@ var lwe = {
 			console.groupEnd();
 		},
 		/**
-		* waits until all necessary libs are ready to use
+		* waits until jQuery is ready to use
 		*/
-		wait_until_ready: function(fn) {
-			console.debug('wait_until_ready');
-			var is_jquery_ready = ((typeof($) == 'function') && (typeof($(document).createAppend) == 'function'));
-			var is_jgrowl_ready = ((typeof($) == 'function') && (typeof($.jGrowl) == 'function'));
-			var is_persist_ready = (typeof(Persist) == 'object');
-			var is_ready = is_jquery_ready && is_jgrowl_ready && is_persist_ready;
+		wait_until_jquery_is_ready: function(fn) {
+			console.debug('wait_until_jquery_is_ready');
+			var is_jquery_ready = ((typeof($) == 'function'));
+			var is_ready = is_jquery_ready;
 			if(is_ready)
 				fn();
 			else
-				setTimeout('lwe.f.wait_until_ready('+fn+')', 200);
+				setTimeout('lwe.f.wait_until_jquery_is_ready('+fn+')', 200);
+	  },
+		/**
+		* waits until editable library is ready to use
+		*/
+		wait_until_editable_is_ready: function(fn) {
+			console.debug('wait_until_editable_is_ready');
+			var is_editable_ready = ((typeof($) == 'function') && (typeof($.editable) == 'object'));
+			var is_ready = is_editable_ready;
+			if(is_ready)
+				fn();
+			else
+				setTimeout('lwe.f.wait_until_editable_is_ready('+fn+')', 200);
+	  },
+		/**
+		* waits until all necessary libs (other than jQuery) are ready to use
+		*/
+		wait_until_other_libs_are_ready: function(fn) {
+			console.debug('wait_until_other_libs_are_ready');
+			var is_jquery_ready = (typeof($) == 'function');
+			var is_jgrowl_ready = ((typeof($) == 'function') && (typeof($.jGrowl) == 'function'));
+			var is_persist_ready = (typeof(Persist) == 'object');
+			var is_autogrow_ready = ((typeof($) == 'function') && (typeof($.editable) == 'object') && (typeof($.editable.types) == 'object') && (typeof($.editable.types['autogrow']) == 'object'));
+			var is_ready = is_jquery_ready && is_jgrowl_ready && is_persist_ready && is_autogrow_ready;
+			if(is_ready)
+				fn();
+			else
+				setTimeout('lwe.f.wait_until_other_libs_are_ready('+fn+')', 200);
 		},
 		/**
 		* sets the loading picture (dis)appear
@@ -808,22 +840,19 @@ var lwe = {
 			create_main_panel: function() {
 				console.debug('create_main_panel %o', 'lwe-main-panel');
 				with(lwe.panel) {
-					$(document.body).createAppend(
-						'div', {id: 'lwe-main-panel', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-							'div', {id: 'lwe-main-panel-container', 'class': 'lwe-not-editable lwe-not-draggable'}, [
-								'input', {id: 'lwe-undo', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'undo', title: 'Undo the last change', onclick: 'lwe.history.undo()'}, [],
-								'input', {id: 'lwe-redo', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'redo', title: 'Redo the last change', onclick: 'lwe.history.redo()'}, [],
-							  'input', {id: 'lwe-save', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'save', title: 'Save the current state', onclick: 'lwe.history.save()'}, [],
-								'input', {id: 'lwe-load', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'load', title: 'Load the persisted state', onclick: 'lwe.history.load()'}, [],
-								/*'input', {id: 'lwe-delete', type: 'button', 'class': 'lwe-button lwe-not-editable lwe-not-draggable', alt: 'delete', title: 'Delete the the current element', onclick: 'lwe.action.remove(this)'}, [],*/
-								'span', {'id': 'lwe-title', 'class': 'lwe-not-editable lwe-not-draggable', title: 'Live Website Editor'}, 'LWE v'+lwe.version+'<sup>(beta)</sup>'
-							]
-						]
-					);
-					// add the element inspector
-					$(document.body).createAppend(
-						'div', {id: 'lwe-inspector', 'class': 'lwe-not-editable lwe-not-draggable'}, []
-					);
+				  $(document.body).append(""+
+				  "<div id='lwe-main-panel' class='lwe-not-editable lwe-not-draggable'>"+
+				    "<div id='lwe-main-panel-container' class='lwe-not-editable lwe-not-draggable'>"+
+				      "<input type='button' id='lwe-undo' class='lwe-button lwe-not-editable lwe-not-draggable disabled' alt='undo' title='Undo the last change' disabled='' onclick='lwe.history.undo()'/>"+
+				      "<input type='button' id='lwe-redo' class='lwe-button lwe-not-editable lwe-not-draggable disabled' alt='redo' title='Redo the last change' disabled='' onclick='lwe.history.redo()'/>"+
+				      "<input type='button' id='lwe-save' class='lwe-button lwe-not-editable lwe-not-draggable disabled' alt='save' title='Save the current state' disabled='' onclick='lwe.history.save()'/>"+
+				      "<input type='button' id='lwe-load' class='lwe-button lwe-not-editable lwe-not-draggable' alt='load' title='Load the persisted state' onclick='lwe.history.load()'/>"+
+				      "<!--<input type='button' id='lwe-load' class='lwe-button lwe-not-editable lwe-not-draggable' alt='delete' title='Delete the the current element' onclick='lwe.action.remove(this)'/>-->"+
+				      "<span id='lwe-title' class='lwe-not-editable lwe-not-draggable' title='Live Website Editor'>LWE v"+lwe.version+"<sup class='lwe-editable'>(beta)</sup></span>"+
+				    "</div>"+
+				  "</div>"+
+				  "<div id='lwe-inspector' class='lwe-not-editable lwe-not-draggable'/>"+
+				  "");
 					// update the state of each history button
 					with(lwe.history.f) {
 						updateButtons();
@@ -930,19 +959,30 @@ var lwe = {
 			//var path = 'http://localhost/lwe/';
 			addCSS(path + 'css/lwe.css');
 			addCSS(path + 'css/jquery.jgrowl.css');
-			path = 'http://lwe.googlecode.com/svn/trunk/';
-			addScript(path + 'lib/jquery-1.3.min.js');
-			addScript(path + 'lib/jquery-ui-personalized-1.6rc4.packed.js');
-			addScript(path + 'lib/jquery.jeditable.js');
-			addScript(path + 'lib/jquery.jeditable.autogrow.js');
-			addScript(path + 'lib/jquery.autogrow.js');
-			addScript(path + 'lib/jquery.jeditable.ajaxupload.js');
-			addScript(path + 'lib/jquery.ajaxfileupload.js');
-			addScript(path + 'lib/jquery.flydom-3.1.1.js');
-			addScript(path + 'lib/jquery.jgrowl.js');
-			addScript(path + 'lib/json2.js');
-			addScript(path + 'lib/persist.js');
-			wait_until_ready(lwe.start_when_ready);
+			//path = 'http://lwe.googlecode.com/svn/trunk/';
+			addScript(path + 'lib/jquery-1.3.1.min.js');
+			wait_until_jquery_is_ready(function() {
+			  var path = 'http://lwe.googlecode.com/svn/trunk/';
+    		//var path = 'http://localhost/lwe/';
+			  with(lwe.f) {
+			    addScript(path + 'lib/jquery-ui-personalized-1.5.3.min.js');
+    			addScript(path + 'lib/jquery.jeditable.js');
+    			addScript(path + 'lib/jquery.jgrowl.js');
+    			addScript(path + 'lib/json2.js');
+    			addScript(path + 'lib/persist.js');
+    			wait_until_editable_is_ready(function() {
+			      var path = 'http://lwe.googlecode.com/svn/trunk/';
+    	    	//var path = 'http://localhost/lwe/';
+			      with(lwe.f) {
+        			addScript(path + 'lib/jquery.jeditable.autogrow.js');
+    			    addScript(path + 'lib/jquery.autogrow.js');
+        			addScript(path + 'lib/jquery.jeditable.ajaxupload.js');
+    			    addScript(path + 'lib/jquery.ajaxfileupload.js');
+		  	      wait_until_other_libs_are_ready(lwe.start_when_ready);
+      			}
+    			});
+			  }
+			});
 		}
 		console.groupEnd();
 	},
