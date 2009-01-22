@@ -959,7 +959,7 @@ var lwe = {
 			//var path = 'http://localhost/lwe/';
 			addCSS(path + 'css/lwe.css');
 			addCSS(path + 'css/jquery.jgrowl.css');
-			//path = 'http://lwe.googlecode.com/svn/trunk/';
+			path = 'http://lwe.googlecode.com/svn/trunk/';
 			addScript(path + 'lib/jquery-1.3.1.min.js');
 			wait_until_jquery_is_ready(function() {
 			  var path = 'http://lwe.googlecode.com/svn/trunk/';
