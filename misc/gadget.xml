@@ -7,6 +7,6 @@
     author="Arnaud Leymet" 
     author_email="arnaud.leymet@gmail.com" />
 <Content type="html"><![CDATA[
-<b><a href="javascript:if(lwe){lwe.stop()}else{var%20lwe=document.createElement('script');lwe.setAttribute('src','http://tinyurl.com/lwe-trunk');document.body.appendChild(lwe)};void(lwe);">Live Website Editor</a></b>
+<b><a href="javascript:if(lwe){lwe.stop()}else{var%20lwe=document.createElement('script');lwe.setAttribute('src','http://tinyurl.com/lwe-trunk');document.body.appendChild(lwe)};void(0);">Live Website Editor</a></b>
 ]]></Content>
 </Module>
