@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.01.22
+ * Last update: 2009.02.03
  */
 
 var lwe_undefined;
@@ -928,7 +928,7 @@ var lwe = {
 		with(lwe.f) {
 			set_loading(true);
 			if(mode=='editing') {
-			  notification('<b>This webpage is now editable!</b>');
+			  notification('<b>This webpage is now editable!</b><br/>Tip: Double click on text elements');
 			  // text editing activation
 				markEditableElements();
 				applyEditableElements();
