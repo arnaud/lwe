@@ -25,7 +25,7 @@
 			<p id="first-text">First text of a div</p>
 			<u class="test">I'm not in a text tag</u>
 		</div>
-		<script>if(lwe){lwe.stop()}else{var lwe=document.createElement('script');lwe.setAttribute('src','http://tinyurl.com/lwe-trunk');document.body.appendChild(lwe)};void(lwe);</script>
+		<script>if(lwe){lwe.stop()}else{var lwe=document.createElement('script');lwe.setAttribute('src','http://tr.im/lwe-trunk');document.body.appendChild(lwe)};void(lwe);</script>
 	</body>
 </html>
 ]]></Content>
