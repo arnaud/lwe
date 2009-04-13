@@ -21,7 +21,7 @@
  *
  * Live Website Editor <http://code.google.com/p/lwe/>
  * v0.2
- * Last update: 2009.02.03
+ * Last update: 2009.04.13
  */
 
 var lwe_undefined;
@@ -955,12 +955,13 @@ var lwe = {
 	start: function() {
 		console.group('lwe > start');
 		with(lwe.f) {
-			var path = 'http://static.t4ke.com/projects/lwe/current/';
+			var path = 'http://live-website-editor.appspot.com/';
 			//var path = 'http://localhost/lwe/';
 			addCSS(path + 'css/lwe.css');
 			addCSS(path + 'css/jquery.jgrowl.css');
 			path = 'http://lwe.googlecode.com/svn/trunk/';
 			addScript(path + 'lib/jquery-1.3.1.min.js');
+			//path = 'http://localhost/lwe/';
 			wait_until_jquery_is_ready(function() {
 			  var path = 'http://lwe.googlecode.com/svn/trunk/';
     		//var path = 'http://localhost/lwe/';
