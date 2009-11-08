@@ -1,0 +1,18 @@
+h1. README
+
+*Live Website Editor*, as a lightweight yet powerful online website editor, helps you edit any website content inplace.
+
+h2. Install 
+
+*"INSTALL Live Website Editor":http://wiki.github.com/arnaud/lwe/bookmarklet*
+
+h2. Features
+
+ * textual content inline editing
+ * -easy dragging & removing of parts of the website (soon)-
+ * save the content state of the modified page, and reload it when needed
+
+h2. Contributors
+
+ * "arnaud":http://github.com/arnaud (author)
+
