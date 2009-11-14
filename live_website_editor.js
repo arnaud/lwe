@@ -750,9 +750,9 @@ var lwe = {
 				// does the element have an id ?
 				var id = element.get(0).id;
 				console.debug('id %o', id);
-				if(id!=lwe_undefined && id.length>0 && isSelectorUnique(tagName+'#'+id+':eq('+getElementPositionRelativeToParent(element)+')')) {
+				if(id!=lwe_undefined && id.length>0 && isSelectorUnique(tagName+'#'+id+':eq('+getElementPositionRelativeToParent(element, "")+')')) {
 					// the id is unique
-					return tagName+'#'+id+':eq('+getElementPositionRelativeToParent(element)+')';
+					return tagName+'#'+id+':eq('+getElementPositionRelativeToParent(element, "")+')';
 				}
 				// does the element have some classes ?
 				var classes = element.get(0).className;
@@ -769,7 +769,7 @@ var lwe = {
 					}
 				}
 				if(no_dom!=lwe_undefined && no_dom) {
-					return tagName+':eq('+getElementPositionRelativeToParent(element)+')';
+					return tagName+':eq('+getElementPositionRelativeToParent(element, "")+')';
 				} else {
 					// we have to go one step up: let's get the parent's unique id
 					return getElementUniqueIdInDOM(element);
@@ -795,8 +795,8 @@ var lwe = {
 		/**
 		* get the relative element position to its parent
 		*/
-		getElementPositionRelativeToParent: function(element, options = "") {
-			console.debug('getElementPositionRelativeToParent %o', element);
+		getElementPositionRelativeToParent: function(element, options) {
+			console.debug('getElementPositionRelativeToParent %o %o', element, options);
 			var parent = element.parent();
 			// there is no parent => so it's the first element
 			if(parent.get(0).tagName==lwe_undefined) {
