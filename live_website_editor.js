@@ -19,9 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * Live Website Editor <http://code.google.com/p/lwe/>
+ * Live Website Editor <http://github.com/arnaud/lwe>
  * v0.2
- * Last update: 2009.04.13
+ * Last update: 2009.11.15
  */
 
 var lwe_undefined;
@@ -740,7 +740,6 @@ var lwe = {
 		},
 		/**
 		* get the selector that makes jQuery select the specified element only
-		* TODO: add the position information
 		*/
 		getElementUniqueId: function(element, no_dom) {
 			console.debug('getElementUniqueId %o', element);
@@ -764,9 +763,9 @@ var lwe = {
 					classes = classes.replace(/  /g, ' ');
 					var classes_str = '.'+classes.split(' ').join('.');
 					console.debug('classes_str %o', classes_str);
-					if(classes_str.length>1 && isSelectorUnique(tagName+classes_str+':eq('+getElementPositionRelativeToParent(element)+')')) {
+					if(classes_str.length>1 && isSelectorUnique(tagName+classes_str+':eq('+getElementPositionRelativeToParent(element, classes_str)+')')) {
 						// the class is unique
-						return tagName+classes_str+':eq('+getElementPositionRelativeToParent(element)+')';
+						return tagName+classes_str+':eq('+getElementPositionRelativeToParent(element, classes_str)+')';
 					}
 				}
 				if(no_dom!=lwe_undefined && no_dom) {
@@ -796,7 +795,7 @@ var lwe = {
 		/**
 		* get the relative element position to its parent
 		*/
-		getElementPositionRelativeToParent: function(element) {
+		getElementPositionRelativeToParent: function(element, options = "") {
 			console.debug('getElementPositionRelativeToParent %o', element);
 			var parent = element.parent();
 			// there is no parent => so it's the first element
@@ -805,7 +804,7 @@ var lwe = {
 			}
 			element.addClass('lwe-dom-curr-elmt');
 			// get the siblings with the same tagName
-			var siblings = parent.children(element.get(0).tagName);
+			var siblings = parent.children(element.get(0).tagName+options);
 			var pos;
 			for(pos=0; pos<siblings.size(); pos++) {
 				var cur_elmt = siblings.get(pos);
