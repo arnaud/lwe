@@ -1,0 +1,40 @@
+{
+  "name": "Live Website Editor",
+  "version": "0.3",
+  "description": "Make persistent changes to any web page, live from the browser!",
+  "icons": {
+    "16": "ico/16.png",
+    "48": "ico/48.png",
+    "128": "ico/128.png"
+  },
+  "browser_action": {
+    "default_icon": "ico/inactive.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "js/lib/jquery-1.3.1.min.js",
+        "js/lib/jquery-ui-personalized-1.5.3.min.js",
+        "js/lib/jquery.jeditable.js",
+        "js/lib/json2.js",
+        "js/lib/persist.js",
+        "js/lib/jquery.jeditable.autogrow.js",
+        "js/lib/jquery.autogrow.js",
+        "js/lib/jquery.jeditable.ajaxupload.js",
+        "js/lib/jquery.ajaxfileupload.js",
+        "js/lwe.js",
+        "js/connector.js"
+      ],
+      "all_frames": true
+    }
+  ],
+  "background_page": "background.html",
+  "permissions": [
+    "tabs",
+    "http://*/*"
+  ]
+}
