@@ -1,6 +1,6 @@
 h1. README
 
-With *Live Website Editor*, make persistent changes to any web page, live from the browser!
+With *Live Website Editor*, make persistent changes to any web page, live from the browser! !http://stillmaintained.com/arnaud/lwe.png!:http://stillmaintained.com/arnaud/lwe
 
 h2. Install 
 
